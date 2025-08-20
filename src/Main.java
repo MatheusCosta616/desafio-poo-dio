@@ -1,63 +1,44 @@
-import br.com.dio.desafio.dominio.Bootcamp;
-import br.com.dio.desafio.dominio.Curso;
-import br.com.dio.desafio.dominio.Dev;
-import br.com.dio.desafio.dominio.Mentoria;
-
-import java.time.LocalDate;
+import br.com.dio.desafio.dominio.menus.*;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Curso curso1 = new Curso();
-        curso1.setTitulo("curso java");
-        curso1.setDescricao("descrição curso java");
-        curso1.setCargaHoraria(8);
+        MenuContext context = new MenuContext();
 
-        Curso curso2 = new Curso();
-        curso2.setTitulo("curso js");
-        curso2.setDescricao("descrição curso js");
-        curso2.setCargaHoraria(4);
+        Map<Integer, MenuAction> actions = new HashMap<>();
+        actions.put(1, new CriarCursoAction(context));
+        actions.put(2, new CriarMentoriaAction(context));
+        actions.put(3, new CriarBootcampAction(context));
+        actions.put(4, new InscreverDevAction(context));
+        actions.put(5, new ProgredirDevAction(context));
+        actions.put(6, new ListarDevsAction(context));
+        actions.put(7, new MostrarCursosAction(context)); // Nova opção para mostrar cursos
 
-        Mentoria mentoria = new Mentoria();
-        mentoria.setTitulo("mentoria de java");
-        mentoria.setDescricao("descrição mentoria java");
-        mentoria.setData(LocalDate.now());
+        int opcao;
+        do {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1. Criar Curso");
+            System.out.println("2. Criar Mentoria");
+            System.out.println("3. Criar Bootcamp");
+            System.out.println("4. Inscrever Dev em Bootcamp");
+            System.out.println("5. Progredir Dev");
+            System.out.println("6. Listar Devs e Progresso");
+            System.out.println("7. Mostrar todos os Cursos");
+            System.out.println("0. Sair");
+            System.out.print("Escolha: ");
+            opcao = context.scanner.nextInt();
+            context.scanner.nextLine();
 
-        /*System.out.println(curso1);
-        System.out.println(curso2);
-        System.out.println(mentoria);*/
-
-        Bootcamp bootcamp = new Bootcamp();
-        bootcamp.setNome("Bootcamp Java Developer");
-        bootcamp.setDescricao("Descrição Bootcamp Java Developer");
-        bootcamp.getConteudos().add(curso1);
-        bootcamp.getConteudos().add(curso2);
-        bootcamp.getConteudos().add(mentoria);
-
-        Dev devCamila = new Dev();
-        devCamila.setNome("Camila");
-        devCamila.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        devCamila.progredir();
-        devCamila.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos Camila:" + devCamila.getConteudosInscritos());
-        System.out.println("Conteúdos Concluídos Camila:" + devCamila.getConteudosConcluidos());
-        System.out.println("XP:" + devCamila.calcularTotalXp());
-
-        System.out.println("-------");
-
-        Dev devJoao = new Dev();
-        devJoao.setNome("Joao");
-        devJoao.inscreverBootcamp(bootcamp);
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        devJoao.progredir();
-        devJoao.progredir();
-        devJoao.progredir();
-        System.out.println("-");
-        System.out.println("Conteúdos Inscritos João:" + devJoao.getConteudosInscritos());
-        System.out.println("Conteúdos Concluidos João:" + devJoao.getConteudosConcluidos());
-        System.out.println("XP:" + devJoao.calcularTotalXp());
-
+            if (opcao == 0) {
+                System.out.println("Saindo...");
+            } else {
+                MenuAction action = actions.get(opcao);
+                if (action != null) {
+                    action.execute();
+                } else {
+                    System.out.println("Opção inválida!");
+                }
+            }
+        } while (opcao != 0);
     }
-
 }
